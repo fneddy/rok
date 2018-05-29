@@ -1,0 +1,7 @@
+[package]
+name = "rok"
+version = "0.1.0"
+authors = ["Eduard Stefes <eduard.stefes@gmail.com>"]
+
+[dependencies]
+rok_derive = {path = "rok_derive"}
