@@ -13,7 +13,7 @@ pub trait Component: Send + Sync
     type Message;
 
     fn update(&mut self, event: Self::Message);
-    fn init(&self);
+    fn init(&mut self);
 }
 
 pub trait ComponentRecv : Send  + Sync

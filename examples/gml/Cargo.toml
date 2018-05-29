@@ -1,0 +1,10 @@
+[package]
+name = "gml"
+version = "0.1.0"
+authors = ["Eduard Stefes <estefes@de.alten.com>"]
+
+[dependencies]
+glib = "*"
+gtk = "*"
+rok = {path = "../rok"}
+rok_derive = {path = "../rok/rok_derive"}
