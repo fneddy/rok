@@ -6,5 +6,5 @@ authors = ["Eduard Stefes <estefes@de.alten.com>"]
 [dependencies]
 qt_widgets = "0.2"
 cpp_utils = "*"
-rok = {path = "../rok"}
-rok_derive = {path = "../rok/rok_derive"}
+rok = {path = "../../"}
+rok_derive = {path = "../../rok_derive"}

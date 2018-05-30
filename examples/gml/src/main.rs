@@ -1,4 +1,5 @@
 #![feature(proc_macro)]
+ #![feature(extern_prelude)]
 extern crate rok;
 extern crate rok_derive;
 use rok_derive::*;
@@ -15,6 +16,9 @@ use std::marker::{Send, Sync};
 use std::sync::mpsc::Sender;
 use std::sync::{Arc, Mutex};
 
+mod gtkframework;
+use gtkframework::Gtk;
+
 pub struct Model {
     counter: i64,
 }
@@ -27,6 +31,7 @@ pub enum Message {
 }
 unsafe impl Send for Message {}
 unsafe impl Sync for Message {}
+impl rok::Message for Message{}
 
 
 #[implement_component(Model,Message,Comp)]
@@ -85,7 +90,7 @@ impl ComponentBuilder for Comp {
 impl Component for Comp{
     type Message = Message;
 
-    fn init(&self) {
+    fn init(&mut self) {
        self.view.show_all();
     }
 
@@ -109,43 +114,11 @@ impl Component for Comp{
 
 
 
-struct Gtk {}
-
-impl FwEventloop for Gtk {
-    type Message=Message;
-
-    fn init_framework(){
-        if gtk::init().is_err() {
-            println!("Failed to initialize GTK.");
-            return;
-        }
-    }
-
-    fn eveltloop(&mut self, update: Arc<Mutex<Component<Message=Self::Message>>>, poll: Arc<Mutex<ComponentRecv<Message=Self::Message>>>){
-        glib::timeout_add(10, move || {
-            let poll = poll.clone();
-            let update = update.clone();
-
-            let message = {
-                let mesg_comp = poll.lock().unwrap();
-                mesg_comp.try_recv()
-            };
-
-
-            if let Ok(value) = message {
-                let mut update = update.lock().unwrap();
-                update.update(value);
-            }
-            return glib::source::Continue(true);
-        });
-    }
-}
-
 
 
 fn main() {
-    Gtk::init_framework();
-    let mut fw = Gtk{};
+    let mut fw: Gtk = Gtk{};
+    FwEventloop::<Message>::init_framework(&mut fw);
 
     let c = CompWrapper::new();
     c.init();

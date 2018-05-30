@@ -1,3 +1,6 @@
+pub trait Message: Send + Sync + Sized {
+}
+
 pub trait ComponentBuilder: Send + Sync
 {
     type Component;
@@ -26,9 +29,9 @@ pub trait ComponentRecv : Send  + Sync
 }
 
 
-pub trait FwEventloop {
-    type Message;
 
-    fn init_framework();
-    fn eveltloop(&self, update: std::sync::Arc<std::sync::Mutex<Component<Message=Self::Message>>>, poll: std::sync::Arc<std::sync::Mutex<ComponentRecv<Message=Self::Message>>>);
+pub trait FwEventloop<M>
+    where M: Message{
+    fn init_framework(&mut self );
+    fn eveltloop(&mut self, update: std::sync::Arc<std::sync::Mutex<Component<Message=M>>>, poll: std::sync::Arc<std::sync::Mutex<ComponentRecv<Message=M>>>);
 }

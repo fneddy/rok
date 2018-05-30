@@ -76,7 +76,7 @@ pub fn implement_component(
 
     let mut expanded = quote! {
         #input
-        
+
         pub struct #component_reciever {
             receiver: std::sync::mpsc::Receiver<#message_type>,
         }
